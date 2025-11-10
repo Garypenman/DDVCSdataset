@@ -1,5 +1,5 @@
 Doubly Deeply Virtual Compton Scattering (DDVCS) with the EpIC generator. Currently focusing on the Low-Q2 limit of (Quasi-real) Timelike Compton Scattering.\
-Input cards are also provided for J/psi production at similar kinematics for the study of background physics and muonID with EpIC.
+Input cards are also provided for J/psi production at similar kinematics for the study of background physics and muonID with the ePIC detector.
 
 The EpIC generator is used to generate DDVCS MC events. Currently there are steering cards for ee and mumu @ 18x275 energy configuration, and ee at 10x130. More configs will come in the future.\
 Author: Paweł Sznajder \
