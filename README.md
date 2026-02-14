@@ -12,7 +12,7 @@ abconv -p 0 18x275_ddvcs_edecay_hminus.hepmc ab_18x275_ddvcs_edecay_hminus.hepmc
 hepmc3ascii2root ab_18x275_ddvcs_edecay_hminus.hepmc ab_18x275_ddvcs_edecay_hminus.root\
 
 
-These afterburned hepmc3 root files are currently available at (with the exception of the 10x130, currently not in the campaign requests)\
+These afterburned hepmc3 root files are currently available at: \
 /gpfs/mnt/gpfs02/eic/gpenman/ \
 under straightforwardly named directories: \
 DDVCS_18x275/  DDVCS_muon_18x275/
