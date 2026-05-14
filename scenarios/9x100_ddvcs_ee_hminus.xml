@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
-<scenario date="${DATE}" description="${DESC}">
+<scenario date="2026-05-06" description="DDVCS auto-generated">
 
    <task service="DDVCSGeneratorService" method="generate">
 
       <general_configuration>
-         <param name="number_of_events" value="${NEVENTS}" />
-         <param name="histogram_file_path" value="${HISTO_FILE}" />
-         <param name="subprocess_type" value="${SUBPROCESS}" />
+         <param name="number_of_events" value="1000000" />
+         <param name="histogram_file_path" value="output/histos/9x100_DDVCS_ee_hminus.root" />
+         <param name="subprocess_type" value="ALL" />
       </general_configuration>
 
       <kinematic_range>
-         <param name="range_y" value="${Y_RANGE}" />
-         <param name="range_Q2" value="${Q2_RANGE}" />
-         <param name="range_t" value="${T_RANGE}" />
-         <param name="range_Q2Prim" value="${Q2P_RANGE}" />
-         <param name="range_phi" value="${PHI_RANGE}" />
-         <param name="range_phiS" value="${PHIS_RANGE}" />
-         <param name="range_phiL" value="${PHIL_RANGE}" />
-         <param name="range_thetaL" value="${THETAL_RANGE}" />
-         <param name="range_xB" value="${XBJ_RANGE}" />
+         <param name="range_y" value="0.0|1.0" />
+         <param name="range_Q2" value="0.0|10.0" />
+         <param name="range_t" value="-2.|-0.0001" />
+         <param name="range_Q2Prim" value="2.|18." />
+         <param name="range_phi" value="0.0|6.28318" />
+         <param name="range_phiS" value="0.0|6.28318" />
+         <param name="range_phiL" value="0.0|6.28318" />
+         <param name="range_thetaL" value="0.031416|3.110177" />
+         <param name="range_xB" value="0.0|1.0" />
       </kinematic_range>
 
       <experimental_conditions>
-         <param name="lepton_energy" value="${LEP_E}" />
+         <param name="lepton_energy" value="9" />
          <param name="lepton_type" value="e-" />
-         <param name="lepton_helicity" value="${LEP_HEL}" />
-         <param name="hadron_energy" value="${HAD_E}" />
+         <param name="lepton_helicity" value="-1" />
+         <param name="hadron_energy" value="100" />
          <param name="hadron_type" value="p" />
-	 <param name="hadron_polarisation" value="${HAD_POL}" />
+	 <param name="hadron_polarisation" value="0.|0.|0.$" />
       </experimental_conditions>
 
       <computation_configuration>
@@ -62,7 +62,7 @@
 
       <kinematic_configuration>
          <module type="DDVCSKinematicModule" name="DDVCSKinematicDefault">
-         	<param name="decay_type" value="${DECAY_TYPE}" />
+         	<param name="decay_type" value="e-" />
          </module>
       </kinematic_configuration>
 
@@ -74,7 +74,7 @@
 
       <writer_configuration>
          <module type="WriterModule" name="WriterHepMC3">
-            <param name="output_file_path" value="${OUT_FILE}" />
+            <param name="output_file_path" value="output/9x100_DDVCS_ee_hminus.hepmc" />
             <param name="HepMC3_writer_type" value="ascii" />
          </module>
       </writer_configuration>

@@ -21,6 +21,9 @@ set -e
 DRY_RUN=0
 if [[ "$1" == "--dry-run" ]]; then
   DRY_RUN=1
+else
+    mkdir -p output
+    mkdir -p output/histos
 fi
 
 
@@ -57,16 +60,36 @@ fi
 # Physics scan definitions (these map directly to XML params)
 # ============================================================
 
-LEP_E_LIST=(9)
+
+# --- Allowed beam configs ---
+ALLOWED_CONFIGS=(
+  9x100
+  9x130
+  9x275
+  10x100
+  10x130
+  18x275
+)
+
+LEP_E_LIST=(9 10 18)
 HAD_E_LIST=(100 130 275)
 LEP_HEL_LIST=(1 -1)              # 1 or -1
 DECAY_TYPE_LIST=("e-" "mu-")        # "e-" (ee) or "mu-" (mumu)
 HAD_POL_LIST=("0.|0.|0.$")    # future-proofed
 
+SUBPROCESS_LIST=("ALL" "BH")
+
 # Kinematic ranges (strings copied verbatim into XML)
 Q2_RANGE="0.0|10.0"
 T_RANGE="-2.|-0.0001"
 Q2P_RANGE="2.|18."
+PHI_RANGE="0.0|6.28318"
+PHIS_RANGE="0.0|6.28318"
+PHIL_RANGE="0.0|6.28318"
+THETAL_RANGE="0.031416|3.110177"
+Y_RANGE="0.0|1.0"
+XBJ_RANGE="0.0|1.0"
+
 
 # ============================================================
 # Run control
@@ -111,121 +134,146 @@ NCONFIGS=0
 TOTAL_JOBS=0
 
 for LEP_E in "${LEP_E_LIST[@]}"; do
-  for HAD_E in "${HAD_E_LIST[@]}"; do
-    for LEP_HEL in "${LEP_HEL_LIST[@]}"; do
-      for DECAY_TYPE in "${DECAY_TYPE_LIST[@]}"; do
-        for HAD_POL in "${HAD_POL_LIST[@]}"; do
+    for HAD_E in "${HAD_E_LIST[@]}"; do
+	config="${LEP_E}x${HAD_E}"
 
-          NCONFIGS=$((NCONFIGS + 1))
+	# --- Check if config is allowed ---
+	if [[ ! " ${ALLOWED_CONFIGS[*]} " =~ " ${config} " ]]; then
+	    echo "Skipping invalid config: $config"
+	    continue
+	fi
+	
+	for SUBPROCESS in "${SUBPROCESS_LIST[@]}"; do
+	    for DECAY_TYPE in "${DECAY_TYPE_LIST[@]}"; do
+		for LEP_HEL in "${LEP_HEL_LIST[@]}"; do
+		    for HAD_POL in "${HAD_POL_LIST[@]}"; do
 
-          # --------------------------
-          # Human-readable tags
-          # --------------------------
+			NCONFIGS=$((NCONFIGS + 1))
 
-          case "$LEP_HEL" in
-            1)  LEP_HEL_TAG="plus" ;;
-           -1)  LEP_HEL_TAG="minus" ;;
-            *)
-              echo "ERROR: unknown LEP_HEL = $LEP_HEL"
-              exit 1
-              ;;
-          esac
+			# --------------------------
+			# Human-readable tags
+			# --------------------------
 
-          if [[ "$DECAY_TYPE" == "e-" ]]; then
-            DECAY_TAG="ee"
-          elif [[ "$DECAY_TYPE" == "mu-" ]]; then
-            DECAY_TAG="mumu"
-          else
-            echo "ERROR: unknown DECAY_TYPE = $DECAY_TYPE"
-            exit 1
-          fi
+			case "$LEP_HEL" in
+			    1)  LEP_HEL_TAG="plus" ;;
+			    -1)  LEP_HEL_TAG="minus" ;;
+			    *)
+				echo "ERROR: unknown LEP_HEL = $LEP_HEL"
+				exit 1
+				;;
+			esac
 
-          #POL_TAG=$(echo "$HAD_POL" | tr '|.$' '_')
-          #BASE_TAG="${LEP_E}x${HAD_E}_${DECAY_TAG}_h${LEP_HEL_TAG}_p${POL_TAG}"
-	  BASE_TAG="${LEP_E}x${HAD_E}_DDVCS_${DECAY_TAG}_h${LEP_HEL_TAG}"
+			if [[ "$DECAY_TYPE" == "e-" ]]; then
+			    DECAY_TAG="ee"
+			elif [[ "$DECAY_TYPE" == "mu-" ]]; then
+			    DECAY_TAG="mumu"
+			else
+			    echo "ERROR: unknown DECAY_TYPE = $DECAY_TYPE"
+			    exit 1
+			fi
 
-          # --------------------------
-          # Split runs if requested
-          # --------------------------
-	  SPLIT_HEPMC_FILES=()
-	  SPLIT_ROOT_FILES=()
-	  FINAL_HEPMC="output/${BASE_TAG}.hepmc"
-	  FINAL_ROOT="output/${BASE_TAG}.root"
+			if [[ "$SUBPROCESS" == "ALL" ]]; then
+			    SUBPROCESS_TAG=""
+			elif [[ "$SUBPROCESS" == "BH" ]]; then
+			    SUBPROCESS_TAG="bhonly_"
+			else
+			    echo "ERROR: unknown SUBPROCESS = $SUBPROCESS"
+			    exit 1
+			fi
 
-	  
-	  if [[ -f "$FINAL_HEPMC" ]]; then
-	      msg "Skipping ${BASE_TAG} (final HEPMC already exists)"
-	      continue
-	  fi
-	  
-	  
-          for ((i=0; i<NSPLIT; i++)); do
+			#POL_TAG=$(echo "$HAD_POL" | tr '|.$' '_')
+			BASE_TAG="${LEP_E}x${HAD_E}_ddvcs_${DECAY_TAG}_${SUBPROCESS_TAG}h${LEP_HEL_TAG}"
+			#BASE_TAG+=p${POL_TAG}"
+			
+			# --------------------------
+			# Split runs if requested
+			# --------------------------
+			SPLIT_HEPMC_FILES=()
+			SPLIT_ROOT_FILES=()
+			FINAL_HEPMC="output/${BASE_TAG}.hepmc"
+			FINAL_ROOT="output/histos/${BASE_TAG}.root"
 
-            RUN_TAG=$(printf "r%02d" "$i")
+			
+			if [[ -f "$FINAL_HEPMC" ]]; then
+			    msg "Skipping ${BASE_TAG} (final HEPMC already exists)"
+			    continue
+			fi
+			
+			
+			for ((i=0; i<NSPLIT; i++)); do
 
-	    if [[ "$NSPLIT" -eq 1 ]]; then
-		TAG="${BASE_TAG}"
-	    else
-		RUN_TAG=$(printf "r%02d" "$i")
-		TAG="${BASE_TAG}_${RUN_TAG}"
-	    fi
-	    
-            XML="scenarios/EIC_${TAG}.xml"
-            OUT_FILE="output/${TAG}.hepmc"
-            HISTO_FILE="output/${TAG}.root"
+			    RUN_TAG=$(printf "r%02d" "$i")
 
-	    SPLIT_HEPMC_FILES+=("$OUT_FILE")
-	    SPLIT_ROOT_FILES+=("$HISTO_FILE")
-	    
-            export LEP_E HAD_E LEP_HEL DECAY_TYPE HAD_POL
-            export Q2_RANGE T_RANGE Q2P_RANGE
-            export NEVENTS="$NEVENTS_PER_RUN"
-            export OUT_FILE HISTO_FILE
-            export DATE="$(date +%F)"
-            export DESC="DDVCS auto-generated"
+			    if [[ "$NSPLIT" -eq 1 ]]; then
+				TAG="${BASE_TAG}"
+			    else
+				RUN_TAG=$(printf "r%02d" "$i")
+				TAG="${BASE_TAG}_${RUN_TAG}"
+			    fi
+			    
+			    XML="scenarios/${TAG}.xml"
+			    OUT_FILE="output/${TAG}.hepmc"
+			    HISTO_FILE="output/histos/${TAG}.root"
 
-            do_or_echo "envsubst < ddvcs.template.xml > $XML"
+			    SPLIT_HEPMC_FILES+=("$OUT_FILE")
+			    SPLIT_ROOT_FILES+=("$HISTO_FILE")
 
-            JOB=$(printf "%04d" $((10#$JOB + 1)))
-            TOTAL_JOBS=$((TOTAL_JOBS + 1))
+			    export SUBPROCESS
+			    export LEP_E HAD_E LEP_HEL DECAY_TYPE HAD_POL
+			    export Y_RANGE Q2_RANGE T_RANGE Q2P_RANGE XBJ_RANGE
+			    export PHI_RANGE PHIS_RANGE PHIL_RANGE THETAL_RANGE
+			    export NEVENTS="$NEVENTS_PER_RUN"
+			    export OUT_FILE HISTO_FILE
+			    export DATE="$(date +%F)"
+			    export DESC="DDVCS auto-generated"
 
-            LINE="$JOB,$XML,$NEVENTS,$OUT_FILE,$HISTO_FILE"
+			    #	    if [[ -f "$XML" ]]; then
+			    #	      msg "Skipping ${XML} (steering card already exists)"
+			    #	      continue
+			    #	    fi
+			    
+			    do_or_echo "envsubst < ddvcs.template.xml > $XML"
 
-            if [[ "$DRY_RUN" == "1" ]]; then
-              msg "Would add to manifest: $LINE"
-            else
-              echo "$LINE" >> "$MANIFEST"
-            fi
+			    JOB=$(printf "%04d" $((10#$JOB + 1)))
+			    TOTAL_JOBS=$((TOTAL_JOBS + 1))
 
-          done
-	  if [[ "$NSPLIT" -gt 1 ]]; then
+			    LINE="$JOB,$XML,$NEVENTS,$OUT_FILE,$HISTO_FILE"
 
-	      HEPMC_LIST="${SPLIT_HEPMC_FILES[*]}"
-	      ROOT_LIST="${SPLIT_ROOT_FILES[*]}"
-	      
-	      if [[ "$DRY_RUN" == "1" ]]; then
-		  msg "Would add merge step for ${BASE_TAG}"
-		  msg "  HEPMC -> ${FINAL_HEPMC}"
-		  msg "  ROOT  -> ${FINAL_ROOT}"
-	      else
-		  {
-		      echo ""
-		      echo "echo \"Merging ${BASE_TAG}\""
-		      echo "# Merge HEPMC"
-		      echo "cat ${HEPMC_LIST} > ${FINAL_HEPMC}"
-		      echo ""
-		      echo "# Merge ROOT (requires hadd)"
-		      echo "hadd -f ${FINAL_ROOT} ${ROOT_LIST}"
-		  } >> "$MERGE_PLAN"
-	      fi
-	      
-	  fi
-        done
-      done
+			    if [[ "$DRY_RUN" == "1" ]]; then
+				msg "Would add to manifest: $LINE"
+			    else
+				echo "$LINE" >> "$MANIFEST"
+			    fi
+
+			done
+			if [[ "$NSPLIT" -gt 1 ]]; then
+
+			    HEPMC_LIST="${SPLIT_HEPMC_FILES[*]}"
+			    ROOT_LIST="${SPLIT_ROOT_FILES[*]}"
+			    
+			    if [[ "$DRY_RUN" == "1" ]]; then
+				msg "Would add merge step for ${BASE_TAG}"
+				msg "  HEPMC -> ${FINAL_HEPMC}"
+				msg "  ROOT  -> ${FINAL_ROOT}"
+			    else
+				{
+				    echo ""
+				    echo "echo \"Merging ${BASE_TAG}\""
+				    echo "# Merge HEPMC"
+				    echo "cat ${HEPMC_LIST} > ${FINAL_HEPMC}"
+				    echo ""
+				    echo "# Merge ROOT (requires hadd)"
+				    echo "hadd -f ${FINAL_ROOT} ${ROOT_LIST}"
+				} >> "$MERGE_PLAN"
+			    fi
+			    
+			fi
+		    done
+		done
+	    done
+	done
     done
-  done
 done
-
 
 # ============================================================
 # Dry-run summary
