@@ -1,1 +1,6 @@
 *~
+bin
+data
+merge_plan.sh
+output
+runs.manifest.csv
