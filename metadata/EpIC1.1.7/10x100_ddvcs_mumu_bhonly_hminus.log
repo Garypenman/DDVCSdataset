@@ -1,0 +1,86 @@
+14-05-2026 01:13:48 [INFO] (Epic::printVersion) EPIC 1.1.8 (https://pawelsznajder.github.io/epic) distributed under GNU Public License
+14-05-2026 01:13:48 [INFO] (Partons::printVersion) PARTONS 5.0.0 (http://partons.cea.fr) distributed under GNU Public License
+14-05-2026 01:13:48 [INFO] (Partons::printVersion) Git branch and revision of this version is main/1ad0b7d3bf62328f564c4ded06793e5feed00d4f
+14-05-2026 01:13:48 [INFO] (Partons::printVersion) Built using Elementary-Utils 5.0.0 (main/0133fc6e69872270027c37381a273893f7841b42) and NumA++ 5.0.0 (main/f184ee75f1d61b380e522d38ba48fbcbe9d78ae5)
+14-05-2026 01:13:48 [INFO] (RandomSeedManager::setSeedCount) Initial random seed set to: 31,904
+14-05-2026 01:13:48 [INFO] (DefaultXMLValidator::isValidXMLDocument) File valid
+14-05-2026 01:13:48 [INFO] (AutomationService::parseXMLFile) File scenarios/10x100_ddvcs_mumu_bhonly_hminus.xml is valid
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getGeneralConfigurationFromTask) General configuration:
+
+Number of events: 1,000,000
+Debugging histogram file: output/histos/10x100_ddvcs_mumu_bhonly_hminus.root
+
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getAdditionalGeneralConfigurationFromTask) Additional general configuration:
+
+Subprocess: BH
+
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getExperimentalConditionsFromTask) Experimental conditions:
+
+Experimental condition lepton energy: 10 [GeV]
+Experimental condition lepton type: e-
+Experimental condition lepton helicity: -1
+Experimental condition hadron energy: 100 [GeV]
+Experimental condition hadron type: p
+Experimental condition hadron polarisation: Vector3D<0, 0, 0>
+Experimental condition fixed target lepton energy equivalent: 2,131.53110430367 [GeV]
+
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getKinematicRangesFromTask) Kinematic ranges:
+
+DDVCS kinematic range y: min: 0 max: 1
+DDVCS kinematic range Q2: min: 0 max: 10
+DDVCS kinematic range t: min: -2 max: -0.0001
+DDVCS kinematic range Q'2: min: 2 max: 18
+DDVCS kinematic range phi: min: 0 max: 6.28318
+DDVCS kinematic range phiS: min: 0 max: 6.28318
+DDVCS kinematic range phiL: min: 0 max: 6.28318
+DDVCS kinematic range thetaL: min: 0.031416 max: 3.110177
+
+DDVCS kinematic range xB: min: 0 max: 1
+
+14-05-2026 01:13:48 [INFO] (DDVCSProcessDMSW22::prepareSubModules) Configured with ScaleModule = DDVCSScalesVirtualitiesSum
+14-05-2026 01:13:48 [INFO] (DDVCSProcessDMSW22::prepareSubModules) Configured with XiConverterModule = DDVCSXiConverterTNeglected
+14-05-2026 01:13:48 [INFO] (DDVCSProcessDMSW22::prepareSubModules) Configured with ConvolCoeffFunctionModule = DDVCSCFFTables
+14-05-2026 01:13:48 [INFO] (DDVCSCFFTables::configure) qcd_order_type configured with value = LO
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getProcessModuleFromTask) Process module: DDVCSProcessDMSW22
+14-05-2026 01:13:48 [INFO] (EventGeneratorFOAM::configure) Parameter nCells changed to 1,000
+14-05-2026 01:13:48 [INFO] (EventGeneratorFOAM::configure) Parameter nSamples changed to 100
+14-05-2026 01:13:48 [INFO] (EventGeneratorFOAM::configure) Parameter nBins changed to 10
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getEventGeneratorModuleFromTask) Event generator module: EventGeneratorFOAM
+14-05-2026 01:13:48 [INFO] (DDVCSKinematicDefault::configure) Decay type set to: muon-
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getKinematicModuleFromTask) Kinematic module: DDVCSKinematicDefault
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getRCModuleFromTask) Radiative correction module: DDVCSRCNull
+14-05-2026 01:13:48 [INFO] (WriterHepMC3::configure) Output file name set to: output/10x100_ddvcs_mumu_bhonly_hminus.hepmc
+14-05-2026 01:13:48 [INFO] (WriterHepMC3::configure) HepMC3 writer type set to: ascii
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::getWriterModuleFromTask) Writer module: WriterHepMC3
+14-05-2026 01:13:48 [INFO] (DDVCSGeneratorService::openHistogramFile) Histogram file created successfully: output/histos/10x100_ddvcs_mumu_bhonly_hminus.root
+[33m14-05-2026 01:13:48 [WARN] (DDVCSKinematicDefault::changeKinematicRange) Range for variable y changed from min: 0 max: 1 to min: 0.0001163484111271 max: 1[0m
+[33m14-05-2026 01:13:48 [WARN] (DDVCSKinematicDefault::changeKinematicRange) Range for variable Q2 changed from min: 0 max: 10 to min: 3.53517887729223e-16 max: 10[0m
+14-05-2026 01:13:48 [INFO] (EventGeneratorFOAM::initialise) Creating new TFoam object
+14-05-2026 01:13:48 [INFO] (EventGeneratorFOAM::initialise) TFoam object name: e503d86336aff8b6821a5ecff53f70c32ce57b57
+14-05-2026 01:13:48 [INFO] (DDVCSCFFTables::loadGrid) CFF H processed successfully: xi (min, max, nNodes): (0.00100000004749745, 0.699999988079071, 21), t (min, max, nNodes): (-1.20000004768372, -0, 11), Q2 (min, max, nNodes): (0.0500000007450581, 10, 11), Q'2 (min, max, nNodes): (2, 10, 11)
+14-05-2026 01:13:48 [INFO] (DDVCSCFFTables::loadGrid) CFF E processed successfully: xi (min, max, nNodes): (0.00100000004749745, 0.699999988079071, 21), t (min, max, nNodes): (-1.20000004768372, -0, 11), Q2 (min, max, nNodes): (0.0500000007450581, 10, 11), Q'2 (min, max, nNodes): (2, 10, 11)
+14-05-2026 01:13:48 [INFO] (DDVCSCFFTables::loadGrid) CFF Ht processed successfully: xi (min, max, nNodes): (0.00100000004749745, 0.699999988079071, 21), t (min, max, nNodes): (-1.20000004768372, -0, 11), Q2 (min, max, nNodes): (0.0500000007450581, 10, 11), Q'2 (min, max, nNodes): (2, 10, 11)
+14-05-2026 01:13:48 [INFO] (DDVCSCFFTables::loadGrid) CFF Et processed successfully: xi (min, max, nNodes): (0.00100000004749745, 0.699999988079071, 21), t (min, max, nNodes): (-1.20000004768372, -0, 11), Q2 (min, max, nNodes): (0.0500000007450581, 10, 11), Q'2 (min, max, nNodes): (2, 10, 11)
+[33m14-05-2026 01:13:48 [WARN] (DDVCSCFFTables::checkRange) Value outside grid, freeze or return zero (more of these warning will be suppressed)[0m
+14-05-2026 02:22:58 [INFO] (DDVCSGeneratorService::printAndSaveGenerationConfiguration) Generation information:
+
+Generator name: EPIC
+Generator version: 1.1.8
+Description: 2026-05-14 | DDVCS auto-generated
+Service name: DDVCSGeneratorService
+Number of generated events: 1,000,000
+Integrated cross-section (value) [nb]: 2.95954328324343
+Integrated cross-section (uncertainty) [nb]: 0.0468775445849986
+Generation date: Thu May 14 14:22:58 2026
+
+Initialization time [s]: 15.99129
+Generation time (total) [s]: 4,133.744586
+Generation time (per event) [s]: 0.004133744586
+
+Additional information:
+lepton_polarisation: -1
+hadron_polarisation: 0|0|0
+suprocesses_type: BH
+
+14-05-2026 02:22:58 [INFO] (DDVCSGeneratorService::closeHistogramFile) Histogram file closed after saving 8 histograms
+14-05-2026 02:22:58 [INFO] (LoggerManager::close) ... Closed properly ...

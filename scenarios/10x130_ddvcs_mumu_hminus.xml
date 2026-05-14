@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<scenario date="2026-05-14" description="DDVCS auto-generated">
+
+   <task service="DDVCSGeneratorService" method="generate">
+
+      <general_configuration>
+         <param name="number_of_events" value="1000000" />
+         <param name="histogram_file_path" value="output/histos/10x130_ddvcs_mumu_hminus.root" />
+         <param name="subprocess_type" value="ALL" />
+      </general_configuration>
+
+      <kinematic_range>
+         <param name="range_y" value="0.0|1.0" />
+         <param name="range_Q2" value="0.0|10.0" />
+         <param name="range_t" value="-2.|-0.0001" />
+         <param name="range_Q2Prim" value="2.|18." />
+         <param name="range_phi" value="0.0|6.28318" />
+         <param name="range_phiS" value="0.0|6.28318" />
+         <param name="range_phiL" value="0.0|6.28318" />
+         <param name="range_thetaL" value="0.031416|3.110177" />
+         <param name="range_xB" value="0.0|1.0" />
+      </kinematic_range>
+
+      <experimental_conditions>
+         <param name="lepton_energy" value="10" />
+         <param name="lepton_type" value="e-" />
+         <param name="lepton_helicity" value="-1" />
+         <param name="hadron_energy" value="130" />
+         <param name="hadron_type" value="p" />
+	 <param name="hadron_polarisation" value="0.|0.|0.$" />
+      </experimental_conditions>
+
+      <computation_configuration>
+
+            <module type="DDVCSProcessModule" name="DDVCSProcessDMSW22">
+
+               <module type="DDVCSScalesModule" name="DDVCSScalesVirtualitiesSum">
+               </module>
+
+               <module type="DDVCSXiConverterModule" name="DDVCSXiConverterTNeglected">
+               </module>
+
+               <module type="DDVCSConvolCoeffFunctionModule" name="DDVCSCFFTables">
+
+                  <param name="qcd_order_type" value="LO" />
+
+               </module>
+
+            </module>
+
+      </computation_configuration>
+
+      <generator_configuration>
+         <module type="EventGeneratorModule" name="EventGeneratorFOAM">
+         	<param name="nCells" value="1000" />
+         	<param name="nSamples" value="100" />
+         	<param name="nBins" value="10" />
+		<!-- <param name="state_file_path" value="test.root" /> -->
+         </module>
+      </generator_configuration>
+
+      <kinematic_configuration>
+         <module type="DDVCSKinematicModule" name="DDVCSKinematicDefault">
+         	<param name="decay_type" value="mu-" />
+         </module>
+      </kinematic_configuration>
+
+      <rc_configuration>
+         <module type="DDVCSRCModule" name="DDVCSRCNull">
+         </module>
+      </rc_configuration>
+
+
+      <writer_configuration>
+         <module type="WriterModule" name="WriterHepMC3">
+            <param name="output_file_path" value="output/10x130_ddvcs_mumu_hminus.hepmc" />
+            <param name="HepMC3_writer_type" value="ascii" />
+         </module>
+      </writer_configuration>
+
+   </task>
+</scenario>
