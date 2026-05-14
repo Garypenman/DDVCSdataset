@@ -52,7 +52,7 @@ for f in "$dir"/*.hepmc; do
   [ "$helicity" = "hminus" ] && helicity="-" && continue
   
   # Clean subprocess
-  [ "$subprocess" = "BHONLY" ] && subprocess="BH"
+  [ "$subprocess" = "bhonly" ] && subprocess="BH"
   [ "$subprocess" = " " ] && subprocess="ALL"
 
   # Clean decay
