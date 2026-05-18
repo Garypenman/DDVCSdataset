@@ -23,7 +23,7 @@ get_configs() {
 
         # --- Well-defined ---
         9x130)
-            echo "ep:ip6_ep_130x9"
+            echo ":ip6_ep_130x9"
             ;;
 
         # --- Study both hiacc and hidiv ---
@@ -94,10 +94,15 @@ for f in *.hepmc; do
 
         label="${cfgpair%%:*}"
         abcfg="${cfgpair##*:}"
-
-        outbase="afterburned/ab_${base}_${label}"
-        outfile="${outbase}.hepmc3.tree.root"
-
+	
+        
+	if [ -z "$label" ]; then
+	    outbase="afterburned/ab_${base}"
+	else
+	    outbase="afterburned/ab_${base}_${label}"
+	fi
+	outfile="${outbase}.hepmc3.tree.root"
+	
         # --- Check if already valid ---
         if [ -f "$outfile" ]; then
             size=$(stat -c%s "$outfile")
